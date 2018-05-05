@@ -17,6 +17,10 @@ class PropertyPayloadModule {
     let allItems = jsonData["payload"],
         typeFilter = 'htv',
         workflowFilter = 'completed';
+
+    // also assumes payload items that are not object type are treated as invalid json data..
+    // otherwise you're better off having to use some json schema validator plugin to verify validity json data further.
+    if (allItems.some(item => typeof item !== "object")) throw new Error("Invalid payload form!");
   
     let filteredItems = allItems.filter(item => {
       if(item.type === typeFilter) return item;
@@ -43,7 +47,7 @@ class PropertyPayloadModule {
     if (propertyItems.length !== 0) {    
       for (const item of propertyItems) {
         let concatenatedAddress = this.concatAddress(item.address);
-        
+
         properties_arr.push({
           concataddress: concatenatedAddress,
           type: item.type,
